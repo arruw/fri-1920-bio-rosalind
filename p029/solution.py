@@ -83,28 +83,33 @@ States.append('-')
 # pprint(EmissionMatrix)
 # print()
 
-p = {s:-inf for s in States}
-p['-'] = 0
+p = {s:(-inf, None) for s in States}
+p['-'] = (0, None)
 path = list()
 
 for x in X:
-    np = {
-        to_state: EmissionMatrix[to_state][x] + max([p[from_state]+TransitionMatrix[from_state][to_state] for from_state in States])
-        for to_state in States
-    }
+    np = dict()
+    for to_state in States:
+        ts = [p[from_state][0]+TransitionMatrix[from_state][to_state] for from_state in States]
+        tsm = max(ts)
+        tsmi = ts.index(tsm) 
+        
+        np[to_state] = (EmissionMatrix[to_state][x] + tsm, States[tsmi])
     path.append(np)
-    # path += max(np.items(), key=operator.itemgetter(1))[0]
     p = np
 
-# pprint(path)
+# backtrack
 result = ''
 prev = None
 for x in path[::-1]:
-    curr = max(x.items(), key=operator.itemgetter(1))[0]
-    if prev != None and x[prev] == x[curr]:
-        curr = prev
-    prev = curr
-    result += curr
+    if prev == None:
+        curr = max(x.items(), key=lambda y: y[1][0])
+        result += curr[0]
+        curr = curr[1]
+    else:
+        curr = x[prev]
+        result += prev
+    prev = curr[1]
 
 print(result[::-1])
 
