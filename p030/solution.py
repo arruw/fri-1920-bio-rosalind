@@ -89,10 +89,10 @@ for i in range(I):
         for k in States:
             if l == '-' or k == '-':
                 a = pow(2, TransitionMatrix[k][l])      
-            elif mpp.count(k) == 0:
+            elif mpp[:-1].count(k) == 0:
                 a = 1/(len(States)-1)
             else:
-                a = len(re.findall(r''+k+l, mpp, overlapped=True)) / mpp.count(k)
+                a = len(list(filter(lambda x: x == (k, l), zip(mpp, mpp[1:])))) / mpp[:-1].count(k)
             TransitionMatrix[k][l] = a
 
         for b in Sigma:
