@@ -9,7 +9,7 @@
             "type": "python",
             "request": "launch",
             "program": "${file}",
-            "args": ["<${fileDirname}/input.txt"],
+            "args": ["<${fileDirname}/input.txt", "|", "tee", "${fileDirname}/output.txt"],
             "console": "integratedTerminal"
         }
     ]
